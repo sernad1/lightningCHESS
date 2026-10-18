@@ -1,7 +1,7 @@
 export default function Home() {
 	return (
 		<div>
-			<b>Homepage of this incredible web application.</b>
+			<h1 className="text-4xl font-bold">Lightning Chess</h1>	
 		</div>
 	);
 }
