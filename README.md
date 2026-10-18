@@ -1,2 +1,1 @@
-# lightningCHESS
-University projekt
+University Project
