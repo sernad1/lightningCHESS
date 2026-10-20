@@ -11,8 +11,21 @@ datasource db {
   provider  = "postgresql"
 }
 
+enum GameStatus {
+  WAITING
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+enum GameResult {
+  WHITE_WIN
+  BLACK_WIN
+  DRAW
+}
+
 model User {
-  id        String   @id
+  id        String   @id @default(cuid()) // changed id to cuid (string) for AuthJS compatability
   username  String   @unique
   email     String   @unique
   boardTheme String @default("classic")
@@ -28,28 +41,43 @@ model User {
 }
 
 model Game{
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid()) // changed id to cuid (string) for safe game rooms
   whitePlayerId String?
   whitePlayer User? @relation("WhitePlayer", fields:[whitePlayerId], references: [id])
   blackPlayerId String?
   blackPlayer User? @relation("BlackPlayer", fields:[blackPlayerId], references: [id])
-  mode String
-  pgn String ? @db.Text
-  fen String?
-  result String?
+  mode String @default("standard")
+  status GameStatus @default(WAITING) // replaced with enum to accomodate different game statuses (ABANDONED, COMPLETED, ETC.)
+  result GameResult? // replaced with enum to accomodate different game outcomes (DRAW, BLACK WIN, etc.)
+  pgn String? @db.Text
+  fen String? 
+  // new block to allow clock sync in games
+  timeControl String? // 3+2, 10+0, etc.
+  whiteTimeRemainingMs Int?
+  blackTimeRemainingMs Int?
+  lastMoveAt DateTime?
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt // nuzno sztoby otslezivat izmeniniya v igre vrode
+
+  // dynamic lookup tables to avoid full-table scans for game history, reconnecting to game, etc.
+  @@index([whitePlayerId, status])
+  @@index([blackPlayerId, status])
+
 }
 model Puzzle{
-  id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement()) 
   fen String
   solution String
   difficulty Int
   solvers SolvedPuzzle[]
 }
+
 model SolvedPuzzle{
   userId String
   user User @relation(fields:[userId], references: [id])
   puzzleId Int
   puzzle Puzzle @relation(fields: [puzzleId], references: [id])
+  solvedAt DateTime @default(now())
   @@id([userId, puzzleId])
 }
