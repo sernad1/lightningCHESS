@@ -8,13 +8,48 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String   @id
   username  String   @unique
   email     String   @unique
-  rating    Int      @default(1200)
+  boardTheme String @default("classic")
+  pieceTheme String @default("classic")
+  isPremium Boolean @default(false)
+  wins Int @default(0)
+  losses Int @default(0)
+  draws Int @default(0)
+  gamesAsWhite Game[] @relation("WhitePlayer")
+  gamesAsBlack Game[] @relation("BlackPlayer")
+  solvedPuzzles SolvedPuzzle[]
   createdAt DateTime @default(now())
+}
+
+model Game{
+  id Int @id @default(autoincrement())
+  whitePlayerId String?
+  whitePlayer User? @relation("WhitePlayer", fields:[whitePlayerId], references: [id])
+  blackPlayerId String?
+  blackPlayer User? @relation("BlackPlayer", fields:[blackPlayerId], references: [id])
+  mode String
+  pgn String ? @db.Text
+  fen String?
+  result String?
+  createdAt DateTime @default(now())
+}
+model Puzzle{
+  id Int @id @default(autoincrement())
+  fen String
+  solution String
+  difficulty Int
+  solvers SolvedPuzzle[]
+}
+model SolvedPuzzle{
+  userId String
+  user User @relation(fields:[userId], references: [id])
+  puzzleId Int
+  puzzle Puzzle @relation(fields: [puzzleId], references: [id])
+  @@id([userId, puzzleId])
 }
