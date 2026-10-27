@@ -9,8 +9,7 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+
 }
 
 enum GameStatus {
@@ -30,6 +29,7 @@ model User {
   id        String   @id @default(cuid()) // changed id to cuid (string) for AuthJS compatability
   username  String   @unique
   email     String   @unique
+  password String?
   boardTheme String @default("classic")
   pieceTheme String @default("classic")
   isPremium Boolean @default(false)

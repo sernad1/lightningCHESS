@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "../../../lib/supabaseClient";
 import { RegisterFormProps } from "@/types/auth";
 
 export default function RegisterForm({
@@ -60,11 +60,11 @@ export default function RegisterForm({
         if (!res.ok) {
           const errorData = await res.json();
           setErrorMessage(
-            errorData.error || "Nie udało się utworzyć profilu gracza."
+            errorData.error || "Nie udało się utworzyć profilu gracza.",
           );
         } else {
           setSuccessMessage(
-            "Konto zostało pomyślnie utworzone! Możesz się teraz zalogować."
+            "Konto zostało pomyślnie utworzone! Możesz się teraz zalogować.",
           );
           setUsername("");
           setEmail("");
