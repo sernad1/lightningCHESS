@@ -1,12 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import RegisterForm from "@/components/RegisterForm";
 
 export default function Home() {
-	return (
-		<div>
-			<h1 className="text-4xl font-bold">Lightning Chess</h1>	
-			<Link href="/chess">Play Chess</Link>
-		</div>
-	);
+  return (
+    <main className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+      <RegisterForm
+        onSuccess={() => {
+          alert("Konto zostało utworzone! Możesz się teraz zalogować.");
+        }}
+        onSwitchToLogin={() => {
+          alert(
+            "Tu w przyszłości podepniecie formularz logowania napisany przez koleżankę."
+          );
+        }}
+      />
+    </main>
+  );
 }
