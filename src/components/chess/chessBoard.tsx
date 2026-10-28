@@ -13,12 +13,13 @@ interface ChessBoardProps {
 
 export default function ChessBoard({pieces, viewMode, onSquareClick}: ChessBoardProps){
 	return (
-		<div className="flex justify-center items-center w-full p-4">
-			{viewMode == "2d" ? (
+		<div className="flex justify-center items-center w-full p-4 relative">
+			<div className={viewMode == "2d" ? "block" : "hidden"}>
 				<ChessBoard2D pieces={pieces} onSquareClick={onSquareClick} />
-			):(
+			</div>
+			<div className={viewMode == "3d" ? "block" : "hidden"}>
 				<ChessBoard3D pieces={pieces} />
-			)}	
+			</div>
 		</div>
 	);
 }

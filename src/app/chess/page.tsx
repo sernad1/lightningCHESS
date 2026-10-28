@@ -1,26 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import ChessBoard from "@/components/chessBoard";
+import ChessBoard from "@/components/chess/chessBoard";
 import { ChessPiece } from "@/types/chess";
 import { Button } from "@/components/ui/button";
-
-// Demo, remove later !!!!! //
-// Also, decide on what should id look like //
-const initialPieces: ChessPiece[] = [
-  { id: "w-king", type: "king", color: "white", square: "e1" },
-  { id: "w-queen", type: "queen", color: "white", square: "d1" },
-  { id: "w-pawn-e", type: "pawn", color: "white", square: "e2" },
-  { id: "w-pawn-d", type: "pawn", color: "white", square: "d2" },
-  
-  { id: "b-king", type: "king", color: "black", square: "e8" },
-  { id: "b-queen", type: "queen", color: "black", square: "d8" },
-  { id: "b-pawn-e", type: "pawn", color: "black", square: "e7" },
-  { id: "b-pawn-d", type: "pawn", color: "black", square: "d7" },
-];
+import { getStandardPieceSet } from "@/lib/utils"
 
 export default function ChessPage() {
-  const [pieces, setPieces] = useState<ChessPiece[]>(initialPieces);
+  const [pieces, setPieces] = useState<ChessPiece[]>(getStandardPieceSet());
   const [viewMode, setViewMode] = useState<"2d" | "3d">("2d");
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
 
