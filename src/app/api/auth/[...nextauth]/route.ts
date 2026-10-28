@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import bcrypt from "bcryptjs";
-import prisma from "../../../../../lib/prisma";
+import prisma from "../../../../lib/prisma";
 import { loginSchema } from "@/lib/validators/auth";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
