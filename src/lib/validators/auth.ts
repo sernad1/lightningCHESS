@@ -18,6 +18,11 @@ export const registerSchema = z.object({
     .min(1, "E-mail jest wymagany")
     .email("Nieprawidłowy format e-mail"),
   password: z.string().min(6, "Hasło musi mieć co najmniej 6 znaków"),
+  confirmPassword: z.string().min(6, "Hasło musi mieć co najmniej 6 znaków")
+})
+.refine((data) => data.password === data.confirmPassword, {
+    message: "Hasła muszą być identyczne",
+    path: ["confirmPassword"],
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;

@@ -1,9 +1,12 @@
-"use client";
-
-import Link from "next/link";
+import { auth } from "@/auth";
 import RegisterForm from "@/components/RegisterForm";
-import LoginForm from "@/components/LoginForm";
+import SignOutButton from "@/components/sign-out-button";
 
-export default function Home() {
-  return <h1>LightningChess</h1>;
+export default async function Home() {
+
+  return (
+    <>
+      <SignOutButton/>
+    </>
+  )
 }

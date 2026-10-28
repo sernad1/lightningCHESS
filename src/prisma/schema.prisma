@@ -27,7 +27,7 @@ enum GameResult {
 
 model User {
   id        String   @id @default(cuid()) // changed id to cuid (string) for AuthJS compatability
-  username  String   @unique
+  username  String   
   email     String   @unique
   password String?
   boardTheme String @default("classic")
