@@ -16,7 +16,7 @@ export default function ChessBoard2D({pieces, onSquareClick}: ChessBoard2DProps)
 	}
 
 	return (
-		<div className="grid grid-cols-8 grid-rows-8 w-[720px] h-[720px] max-w-full aspect-square border-4 border-amber-900 rounded-lg shadow-2xl overflow-hidden">
+		<div className="grid grid-cols-8 grid-rows-8 w-full h-full max-w-full aspect-square border-4 border-amber-900 rounded-lg shadow-2xl overflow-hidden">
 			{RANKS.map((rank, rIdx) => FILES.map((file, fIdx) => {
 				const square = `${file}${rank}`;
 				const isDark = (rIdx + fIdx) % 2 === 1;

@@ -29,26 +29,36 @@ export default function ChessPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-6 p-6 bg-background">
-      <div className="flex flex-col items-center gap-2">
-        <h1 className="text-2xl font-bold">Chess Game ({viewMode.toUpperCase()} Mode)</h1>
-        <p className="text-sm text-muted-foreground">
-          {selectedSquare ? `Selected: ${selectedSquare}. Click a destination.` : "Click a piece to move."}
+    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen gap-8 p-6 bg-background">
+      <div className="flex flex-col items-start gap-4 p-6 border border-border rounded-xl bg-card shadow-sm w-full md:w-72">
+        <div className="space-y-1">
+          <h1 className="text-xl font-bold tracking-tight">Chess Game</h1>
+          <span className="inline-block text-xs font-semibold px-2 py-0.5 rounded bg-muted text-muted-foreground uppercase">
+            {viewMode} Mode
+          </span>
+        </div>
+
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {selectedSquare
+            ? `Selected: ${selectedSquare}. Click a destination.`
+            : "Click a piece to move."}
         </p>
 
-        <Button 
-          variant="outline" 
+        <Button
+          variant="default"
+          className="w-full mt-2"
           onClick={() => setViewMode(viewMode === "2d" ? "3d" : "2d")}
         >
           Switch to {viewMode === "2d" ? "3D" : "2D"} View
         </Button>
       </div>
 
-      <ChessBoard 
-        pieces={pieces} 
-        viewMode={viewMode} 
-        onSquareClick={handleSquareClick} 
-      />
-    </div>
+      <div className="flex justify-center items-center">
+        <ChessBoard
+          pieces={pieces}
+          viewMode={viewMode}
+          onSquareClick={handleSquareClick}
+        />
+      </div>    </div>
   );
 }
