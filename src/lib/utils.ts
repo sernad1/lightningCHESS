@@ -8,19 +8,16 @@ export default function getRowAndColumn(address: string){
 	return {row, column};
 }
 
-export function getChessPieceModelCoords(square: string): [x: float, y: float, z: float]{
+export function getChessPieceModelCoords(square: string): [x: number, y: number, z: number]{
 	const rank = parseInt(square[1]);	
-
 	const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
-	const ranks = [1, 2, 3, 4, 5, 6, 7, 8];
-
 	const fileIdx = files.indexOf(square[0]);
+
 	return [fileIdx - 3.5, 0, rank - 4.5];		
 }
 
 export function getStandardPieceSet(){
 	const pieceSet: ChessPiece[] = [];
-
 	const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
 	files.forEach((file, _) => {
