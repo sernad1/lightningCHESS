@@ -1,4 +1,4 @@
-import { PreferredSide, PreferredGameMode, ViewMode, PreferencesStore } from "@/types/preferences";
+import { PreferredSide, PreferredGameMode, ViewMode, PreferencesStore } from "@/types/zustand/preferences";
 import { create } from "zustand";
 import { persist } from "zustand/middleware"
 

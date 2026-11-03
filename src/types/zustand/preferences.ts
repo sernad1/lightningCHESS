@@ -1,5 +1,5 @@
 export type ViewMode = "2D" | "3D";
-export type PreferredSide = "white" | "black" | "random";
+export type PreferredSide = "w" | "b" | "random";
 export type PreferredGameMode = "bullet" | "blitz" | "rapid" | "classical" | "chess960";
 
 export type PreferencesStore = {
@@ -21,5 +21,5 @@ export type PreferencesStore = {
         setSfxVolume: (sfxVolume: number) => void;
         setMusicVolume: (musicVolume: number) => void;
     }
-
 }
+
