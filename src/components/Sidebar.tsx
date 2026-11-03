@@ -7,22 +7,21 @@ import {
   Settings,
   Zap,
 } from "lucide-react";
-import { NavigationItem, SidebarProps } from "@/types/navigation";
-
+import { NavigationItem } from "@/types/navigation";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 const NAVIGATION_ITEMS: NavigationItem[] = [
-  { id: "play", label: "Graj", icon: ChessQueen },
-  { id: "puzzles", label: "Zagadki", icon: Puzzle },
-  { id: "history", label: "Historia gier", icon: RotateCcwClock },
-  { id: "stats", label: "Statystyki", icon: ChartNoAxesColumn },
-  { id: "settings", label: "Ustawienia", icon: Settings },
+  { href: "/play", label: "Graj", icon: ChessQueen },
+  { href: "/puzzles", label: "Zagadki", icon: Puzzle },
+  { href: "/history", label: "Historia gier", icon: RotateCcwClock },
+  { href: "/stats", label: "Statystyki", icon: ChartNoAxesColumn },
+  { href: "/settings", label: "Ustawienia", icon: Settings },
 ];
 
-export default function Sidebar({
-  activeTab = "play",
-  onSelectTab,
-}: SidebarProps) {
+export default function Sidebar() {
+  const pathname = usePathname();
   return (
-    <aside className="w-64 h-screen bg-main-darkest text-main-white p-4 flex flex-col justify-between">
+    <aside className="w-64 h-screen shrink-0 bg-main-darkest text-main-white p-4 flex flex-col justify-between">
       <nav className="space-y-1.5">
         <div className="flex items-center gap-3 text-xl mb-8">
           <Zap className="w-6 h-6 text-main-accent" />
@@ -30,22 +29,23 @@ export default function Sidebar({
         </div>
         {NAVIGATION_ITEMS.map((item) => {
           const Icon = item.icon;
-          const isActive = activeTab === item.id;
+          const isActive =
+            pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
-            <button
-              key={item.id}
-              onClick={() => onSelectTab?.(item.id)}
+            <Link
+              key={item.href}
+              href={item.href}
               className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl ${
                 isActive
                   ? "bg-main-dark text-main-white font-semibold"
-                  : "text-slate-300 hover:bg-brand-dark/50 hover:text-white"
+                  : "text-slate-300 hover:bg-main-dark/50 hover:text-white"
               }`}
             >
               <div className="flex items-center gap-3">
                 <Icon className="w-5 h-5 text-main-accent" />
                 <span>{item.label}</span>
               </div>
-            </button>
+            </Link>
           );
         })}
       </nav>
