@@ -77,7 +77,7 @@ model Puzzle{
 
 model SolvedPuzzle{
   userId String
-  user User @relation(fields:[userId], references: [id])
+  user User @relation(fields:[userId], references: [id], onDelete: Cascade)
   puzzleId Int
   puzzle Puzzle @relation(fields: [puzzleId], references: [id])
   solvedAt DateTime @default(now())
