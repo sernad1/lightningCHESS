@@ -23,10 +23,10 @@ export default function Sidebar() {
   return (
     <aside className="w-64 h-screen shrink-0 bg-main-darkest text-main-white p-4 flex flex-col justify-between">
       <nav className="space-y-1.5">
-        <div className="flex items-center gap-3 text-xl mb-8">
+        <Link className="flex items-center gap-3 text-xl mb-8" href="/">
           <Zap className="w-6 h-6 text-main-accent" />
           <span>LightningChess</span>
-        </div>
+        </Link>
         {NAVIGATION_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive =

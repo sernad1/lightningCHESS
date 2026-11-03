@@ -22,7 +22,7 @@ export default async function HomePage() {
           <h1 className="text-3xl font-bold">
             Witaj, {session.user?.name || session.user?.email}! 👋
           </h1>
-          <p className="text-emerald-300/70 text-sm mt-1">
+          <p className="text-main-light text-sm mt-1">
             Wybierz opcję z Sidebaru, aby rozpocząć.
           </p>
         </header>
