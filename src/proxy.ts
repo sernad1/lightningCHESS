@@ -1,13 +1,14 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-const protectedRoutes = ["/profile"];
+const protectedRoutes = ["/dashboard", "/profile","/game","/puzzles"];
 
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!req.auth;
-  const isProtected = pathname === "/" || protectedRoutes.some((route) => pathname.startsWith(route));
+
+  const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
 
   if (isProtected && !isLoggedIn) {
     const loginUrl = new URL("/login", req.nextUrl);
@@ -15,9 +16,7 @@ export default auth((req) => {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (pathname === "/login" && isLoggedIn) {
-    return NextResponse.redirect(new URL("/", req.nextUrl));
-  }
+  
 
   return NextResponse.next();
 });

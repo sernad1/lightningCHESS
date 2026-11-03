@@ -55,11 +55,24 @@ export const signup = async (
   }
 
   const { username, email, password } = validatedFields.data;
-  const user = await prisma.user.findUnique({
-    where: { email: email },
+ 
+  // Check if the email is already registered
+  try{
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [{email : email},{username: username}],
+      },
   });
+  if(existingUser){
+    if(existingUser.email === email){
+      return { error: "Ten e-mail jest już zarejestrowany." };
+    }
+    return { error: "Ta nazwa użytkownika jest już zajęta." };
+  }
 
-  if (user) return { error: "Ten adres mailowy już jest zajęty" };
+
+
+  
 
   const hashedPassword = await bcrypt.hash(password, 11);
   await prisma.user.create({
@@ -69,6 +82,10 @@ export const signup = async (
       password: hashedPassword,
     },
   });
+}catch (error) {
+  console.error("Błąd podczas rejestracji w bazie", error);
+  return {error : "Nie udało się stworzyć konta. Spróbuj ponownie później."};
+}
 
   try {
     await signIn("credentials", {

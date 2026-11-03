@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useActionState, useState } from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import GoogleLogin from "./google-login";
 import { credentialslogin } from "@/actions/auth";
 import Link from "next/link";
@@ -8,8 +8,9 @@ import Link from "next/link";
 export default function LoginForm() {
   const [state, formAction, isPending] = useActionState(
     credentialslogin,
-    undefined
+    undefined,
   );
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   {
