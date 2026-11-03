@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-import Sidebar from "@/components/Sidebar"; // Twój istniejący komponent!
-import LandingPage from "@/components/LandingPage"; // Twój/prosty komponent powitalny
+import Sidebar from "@/components/Sidebar";
+import LandingPage from "@/components/LandingPage";
 
 export const instant = false; // Wyłącz natychmiastowe renderowanie, aby umożliwić sprawdzenie sesji
 export default async function HomePage() {
