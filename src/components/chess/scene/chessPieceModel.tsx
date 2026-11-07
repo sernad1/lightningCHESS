@@ -1,21 +1,67 @@
-import { useRef } from "react"; 
-import { useThree } from "@react-three/fiber";
+import React, { useRef, useEffect } from "react";
+import { useLoader, useThree } from "@react-three/fiber";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import * as THREE from "three";
 
-// invalidate forces r3f to render next frame, can be used with frameloop="demand" to render new frames only when something changes //
 interface ChessPieceModelProps {
 	coords: [number, number, number];
-	size: [number, number, number];
+	modelPath: string;
+	scale?: number;
 }
 
-export function ChessPieceModel({coords, size}: ChessPieceModelProps){
-	const meshRef = useRef();
-
+export function ChessPieceModel({ coords, modelPath, scale = 1 }: ChessPieceModelProps) {
+	const groupRef = useRef<THREE.Group>(null);
 	const { invalidate } = useThree();
 
+	if (!modelPath) {
+        return (
+            <mesh ref={groupRef as any} position={coords} castShadow receiveShadow>
+                <boxGeometry args={[0.6, 0.8, 0.6]} />
+                <meshStandardMaterial color="#cbd5e1" />
+            </mesh>
+        );
+    }
+
 	return (
-		<mesh castShadow receiveShadow ref={meshRef} position={coords}>
-			<boxGeometry args={size}/>
-			<meshStandardMaterial color="red"/>
-		</mesh>
-	);
+        <LoadedPieceModel 
+            groupRef={groupRef} 
+            coords={coords} 
+            modelPath={modelPath} 
+            scale={scale} 
+        />
+    );
+}
+
+function LoadedPieceModel({ groupRef, coords, modelPath, scale }:{ 
+	    groupRef: React.RefObject<THREE.Group>; 
+	    coords: [number, number, number]; 
+	    modelPath: string; 
+	    scale: number; 
+	}){
+
+    const gltf = useLoader(GLTFLoader, modelPath);
+	const { invalidate } = useThree();
+    
+    const clonedScene = React.useMemo(() => {
+      const clone = gltf.scene.clone(true);
+      
+      clone.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+      
+      return clone;
+    }, [gltf.scene]);
+
+	useEffect(() => {
+		invalidate();
+	}, [invalidate]);
+    
+    return (
+      <group ref={groupRef} position={coords}>
+        <primitive object={clonedScene} scale={[scale, scale, scale]} />
+      </group>
+    );
 }

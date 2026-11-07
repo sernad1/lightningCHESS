@@ -6,20 +6,21 @@ import * as THREE from 'three';
 useLoader.preload(EXRLoader, "/assets/textures/env_map.exr");
 
 export function SceneEnvironment(){
-	const texture = useLoader(EXRLoader, "/assets/textures/env_map.exr");
-	const { scene } = useThree();
+    const texture = useLoader(EXRLoader, "/assets/textures/env_map.exr");
+    const { scene, invalidate } = useThree();
 
-	useEffect(() => {
-		texture.mapping = THREE.EquirectangularReflectionMapping;	
-		scene.environment = texture;
-		scene.background = new THREE.Color("#303030");
+    useEffect(() => {
+        texture.mapping = THREE.EquirectangularReflectionMapping;    
+        scene.environment = texture;
+        scene.background = new THREE.Color("#303030");
 
-		return () => {
-			scene.environment = null;
-			scene.background = null;
-		};
-	}, [scene, texture]
-	);
+        invalidate();
 
-	return null;
+        return () => {
+            scene.environment = null;
+            scene.background = null;
+        };
+    }, [scene, texture, invalidate]);
+
+    return null;
 }
