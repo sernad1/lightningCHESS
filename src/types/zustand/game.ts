@@ -1,7 +1,9 @@
 import { GameResult, GameStatus, MatchType, TimeControlMode } from "@prisma/client";
+import { Color, PieceSymbol, Square } from "chess.js";
 
 export type CurrentMoveTurn = "w" | "b"
 export type PromotionPiece = "q" | "r" | "b" | "n";
+export type FENPiece = { square: Square; type: PieceSymbol; color: Color } 
 
 export type GameStore = {
     id: string | null;

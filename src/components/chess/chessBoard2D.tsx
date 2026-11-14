@@ -1,49 +1,61 @@
 "use client";
 
-import {ChessPiece} from "@/types/chess";
+import React, { useMemo } from "react";
+import { Chessboard } from "react-chessboard";
+import { useGameFen, useGameStoreActions } from "@/stores/useGameStore";
+import { usePreferredBoardTheme, usePreferredPieceTheme} from "@/stores/usePreferencesStore";
+import { PromotionPiece } from "@/types/zustand/game";
 
 interface ChessBoard2DProps {
-	pieces: ChessPiece[];
-	onSquareClick?: (square: string) => void;
+  selectedSquare?: string | null;
+  onSquareClick?: (square: string) => void;
 }
 
-const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
-const RANKS = [8, 7, 6, 5, 4, 3, 2, 1];
+const PIECE_UNICODES: Record<string, string> = {
+  wP: "♙", wR: "♖", wN: "♘", wB: "♗", wQ: "♕", wK: "♔",
+  bP: "♟", bR: "♜", bN: "♞", bB: "♝", bQ: "♛", bK: "♚",
+};
 
-export default function ChessBoard2D({pieces, onSquareClick}: ChessBoard2DProps){
-	const getPieceAtSquare = (square: string) => {
-		return pieces.find((p) => p.square === square);
-	}
+export default function ChessBoard2D({ selectedSquare, onSquareClick}: ChessBoard2DProps) {
+  const fen = useGameFen();
+  const { makeMove } = useGameStoreActions();
+  const boardTheme = usePreferredBoardTheme();
+  const pieceTheme = usePreferredPieceTheme();
+  const customPieces = useMemo(() => {
+    const pieceComponents: Record<string, () => React.JSX.Element> = {};
 
-	return (
-		<div className="grid grid-cols-8 grid-rows-8 w-full h-full max-w-full aspect-square border-4 border-amber-900 rounded-lg shadow-2xl overflow-hidden">
-			{RANKS.map((rank, rIdx) => FILES.map((file, fIdx) => {
-				const square = `${file}${rank}`;
-				const isDark = (rIdx + fIdx) % 2 === 1;
-				const piece = getPieceAtSquare(square);
+    Object.entries(PIECE_UNICODES).forEach(([code, symbol]) => {
+      const isWhite = code.startsWith("w");
+      const fill = isWhite ? pieceTheme.whitePrimary : pieceTheme.blackPrimary;
+      const stroke = isWhite ? "rgba(0, 0, 0, 0.55)" : "rgba(255, 255, 255, 0.3)";
 
-				return (
-					<div key={square} onClick={() => onSquareClick?.(square)} className={`flex items-center justify-center relative cursor-pointer select-none transition-colors ${isDark ? "bg-amber-800 text-amber-100" : "bg-amber-200 text-amber-900"}`}>
-						<span className="absolute bottom-0.5 right-1 text-[9px] opacity-30 font-mono"> {/*Temporary*/}
-							{square}
-						</span>
+      pieceComponents[code] = () => (
+        <svg viewBox="0 0 45 45" className="w-full h-full select-none pointer-events-none drop-shadow">
+          <text x="50%" y="55%" dominantBaseline="middle" textAnchor="middle" fontSize="34"
+            fill={fill} stroke={stroke} strokeWidth="1.2" paintOrder="stroke">
+            {symbol}
+          </text>
+        </svg>
+      );
+    });
 
-						{piece && (
-							<div className="text-4xl filter drop-shadow-md transition-transform hover:scale-110">
-								{getPieceSymbol(piece)}
-							</div>
-						)}
-					</div>
-				);
-			}))}
-		</div>
-	);
-}
+    return pieceComponents;
+  }, [pieceTheme.whitePrimary, pieceTheme.blackPrimary]);
 
-function getPieceSymbol(piece: ChessPiece){
-	const symbols: Record<string, Record<string, string>> = {
-		white: { pawn: "♙", rook: "♖", knight: "♘", bishop: "♗", queen: "♕", king: "♔" },
-    	black: { pawn: "♟", rook: "♜", knight: "♞", bishop: "♝", queen: "♛", king: "♚" }
-	};
-	return symbols[piece.color]?.[piece.type] || "";
+  return (
+    <div className="w-full h-full max-w-full aspect-square rounded-lg shadow-2xl overflow-hidden border-8"
+      style={{ borderColor: boardTheme.boardFrame }}>
+      <Chessboard
+        options={{ position: fen, pieces: customPieces, lightSquareStyle: { backgroundColor: boardTheme.lightSquare },
+          darkSquareStyle: { backgroundColor: boardTheme.darkSquare },
+          squareStyles: selectedSquare ? { [selectedSquare]: { backgroundColor: "rgba(255, 255, 0, 0.4)" } } : {},
+          onPieceDrop: ({ sourceSquare, targetSquare, piece }) => {
+            if (!targetSquare) return false;
+            const promotion = (piece.pieceType[1]?.toLowerCase() ?? "q") as PromotionPiece;
+            return makeMove(sourceSquare, targetSquare, promotion);
+          },
+          onSquareClick: ({ square }) => { onSquareClick?.(square) },
+        }}/>
+    </div>
+  );
 }

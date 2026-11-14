@@ -1,61 +1,16 @@
-import { ChessPiece } from "@/types/chess";
+import { FENPiece } from "@/types/zustand/game";
+import { Chess} from "chess.js";
 
-export { cn } from "cn"
+export { cn } from "cn";
 
-export default function getRowAndColumn(address: string){
-	const column = address[0];
-	const row = parseInt(address[1], 10);
-	return {row, column};
+export function getPiecesFromFen(fen: string): FENPiece[] {
+  return new Chess(fen).board().flat().filter((cell): cell is NonNullable<typeof cell> => cell !== null);
 }
 
-export function getChessPieceModelCoords(square: string): [x: number, y: number, z: number]{
-	const rank = parseInt(square[1]);	
-	const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
-	const fileIdx = files.indexOf(square[0]);
+export function getChessPieceModelCoords(square: string): [x: number, y: number, z: number] {
+  const rank = parseInt(square[1], 10);
+  const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+  const fileIdx = files.indexOf(square[0]);
 
-	return [fileIdx - 3.5, 0, rank - 4.5];		
-}
-
-export function getStandardPieceSet(){
-	const pieceSet: ChessPiece[] = [];
-	const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
-
-	files.forEach((file, _) => {
-		pieceSet.push({
-			id: `w-pawn-${file}`,
-			type: "pawn",
-			color: "white",
-			square: `${file}2`
-		});
-
-		pieceSet.push({
-			id: `b-pawn-${file}`,
-			type: "pawn",
-			color: "black",
-			square: `${file}7`
-		});
-	});
-
-	pieceSet.push({id: "w-rook-a", type: "rook", color: "white", square: "a1"});
-	pieceSet.push({id: "w-rook-h", type: "rook", color: "white", square: "h1"});
-	pieceSet.push({id: "b-rook-a", type: "rook", color: "black", square: "a8"});
-	pieceSet.push({id: "b-rook-h", type: "rook", color: "black", square: "h8"});
-
-	pieceSet.push({id: "w-knight-b", type: "knight", color: "white", square: "b1"});
-	pieceSet.push({id: "w-knight-g", type: "knight", color: "white", square: "g1"});
-	pieceSet.push({id: "b-knight-b", type: "knight", color: "black", square: "b8"});
-	pieceSet.push({id: "b-knight-g", type: "knight", color: "black", square: "g8"});
-
-	pieceSet.push({id: "w-bishop-c", type: "bishop", color: "white", square: "c1"});
-	pieceSet.push({id: "w-bishop-f", type: "bishop", color: "white", square: "f1"});
-	pieceSet.push({id: "b-bishop-c", type: "bishop", color: "black", square: "c8"});
-	pieceSet.push({id: "b-bishop-f", type: "bishop", color: "black", square: "f8"});
-
-	pieceSet.push({id: "w-queen-d", type: "queen", color: "white", square: "d1"});
-	pieceSet.push({id: "b-queen-d", type: "queen", color: "black", square: "d8"});
-	
-	pieceSet.push({id: "w-king-e", type: "king", color: "white", square: "e1"});
-	pieceSet.push({id: "b-king-e", type: "king", color: "black", square: "e8"});
-
-	return pieceSet;
+  return [fileIdx - 3.5, 0, 4.5 - rank];
 }

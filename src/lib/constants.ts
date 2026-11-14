@@ -1,13 +1,14 @@
 import { BoardTheme, PieceTheme } from "@/types/zustand/preferences";
+import { PieceSymbol } from "chess.js";
 
-export const PIECE_MODELS: Record<string, string> = {
-  pawn: "/assets/models/pawn.glb",
-  rook: "/assets/models/rook.glb",
+export const PIECE_MODELS: Partial<Record<PieceSymbol, string>> = {
+  p: "/assets/models/pawn.glb",
+  r: "/assets/models/rook.glb",
   /*
-  knight: "/assets/models/knight.glb",
-  bishop: "/assets/models/bishop.glb",
-  queen: "/assets/models/queen.glb",
-  king: "/assets/models/king.glb",
+  n: "/assets/models/knight.glb",
+  b: "/assets/models/bishop.glb",
+  q: "/assets/models/queen.glb",
+  k: "/assets/models/king.glb",
   */
 };
 
@@ -25,3 +26,8 @@ export const PIECE_THEMES: PieceTheme[] = [
   { name: "Royal Gold & Obsidian", whitePrimary: "#fef08a", blackPrimary: "#312e81"},
   { name: "Minimalist Matte", whitePrimary: "#ffffff", blackPrimary: "#18181b"},
 ];
+
+export const PIECE_UNICODES: Record<string, string> = {
+  wP: "♙", wR: "♖", wN: "♘", wB: "♗", wQ: "♕", wK: "♔",
+  bP: "♟", bR: "♜", bN: "♞", bB: "♝", bQ: "♛", bK: "♚",
+};
