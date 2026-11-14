@@ -38,8 +38,8 @@ model User {
   username  String   
   email     String   @unique
   password String?
-  boardTheme String @default("classic")
-  pieceTheme String @default("classic")
+  boardTheme    Json           @default("{\"name\":\"Classic Wood\",\"lightSquare\":\"#f0d9b5\",\"darkSquare\":\"#b58863\",\"boardFrame\":\"#5c3a21\"}")
+  pieceTheme    Json           @default("{\"name\":\"Classic Ivory & Ebony\",\"whitePrimary\":\"#f8fafc\",\"blackPrimary\":\"#334155\"}")
   isPremium Boolean @default(false)
   wins Int @default(0)
   losses Int @default(0)
