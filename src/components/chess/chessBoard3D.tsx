@@ -45,7 +45,7 @@ export default function ChessBoard3D({pieces}: ChessBoard3DProps){
 								key={piece.id} 
 								modelPath={PIECE_MODELS[piece.type] || ""} 
 								coords={getChessPieceModelCoords(piece.square)} 
-								scale={0.5}
+								scale={0.4}
 							/>
 						))
 					}
