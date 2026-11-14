@@ -57,5 +57,7 @@ export function getStandardPieceSet(){
 	pieceSet.push({id: "w-king-e", type: "king", color: "white", square: "e1"});
 	pieceSet.push({id: "b-king-e", type: "king", color: "black", square: "e8"});
 
+	console.log(pieceSet);
+
 	return pieceSet;
 }

@@ -19,7 +19,7 @@ export default function ChessBoard3D({pieces}: ChessBoard3DProps){
 	return (
 		<div className="w-full h-full border border-border rounded-lg flex items-center justify-center bg-slate-950 text-slate-200">
 			<Suspense fallback={null}>
-				<Canvas shadows camera={{position: [0, 12, 12], fov: 45}} frameloop="demand">
+				<Canvas shadows camera={{position: [0, 12, 8], fov: 50}} frameloop="demand">
 					<SceneEnvironment/>
 					<directionalLight 
 						castShadow 
