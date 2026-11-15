@@ -4,12 +4,10 @@ import { PieceSymbol } from "chess.js";
 export const PIECE_MODELS: Partial<Record<PieceSymbol, string>> = {
   p: "/assets/models/pawn.glb",
   r: "/assets/models/rook.glb",
-  /*
   n: "/assets/models/knight.glb",
   b: "/assets/models/bishop.glb",
   q: "/assets/models/queen.glb",
   k: "/assets/models/king.glb",
-  */
 };
 
 
