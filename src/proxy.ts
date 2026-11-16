@@ -1,22 +1,27 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-const protectedRoutes = ["/dashboard", "/profile","/game","/puzzles"];
-
+const protectedRoutes = [
+  "/dashboard",
+  "/profile",
+  "/game",
+  "/puzzles",
+  "/settings",
+];
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!req.auth;
 
-  const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
+  const isProtected = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
   if (isProtected && !isLoggedIn) {
     const loginUrl = new URL("/login", req.nextUrl);
     loginUrl.searchParams.set("callbackUrl", req.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
   }
-
-  
 
   return NextResponse.next();
 });
