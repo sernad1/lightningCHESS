@@ -10,6 +10,7 @@ export const PIECE_MODELS: Partial<Record<PieceSymbol, string>> = {
   k: "/assets/models/king.glb",
 };
 
+export const BOARD_MODEL: string = "/assets/models/board.glb";
 
 export const DEFAULT_BOARD_THEME: BoardTheme = { name: "Classic Wood", lightSquare: "#f0d9b5", 
   darkSquare: "#b58863", boardFrame: "#5c3a21"};
