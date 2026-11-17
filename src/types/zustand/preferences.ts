@@ -1,6 +1,8 @@
 export type ViewMode = "2D" | "3D";
 export type PreferredSide = "white" | "black" | "random";
 export type PreferredGameMode = "bullet" | "blitz" | "rapid" | "classical" | "chess960";
+export type BoardColorField = keyof Omit<BoardTheme, "name">;
+export type PieceColorField = keyof Omit<PieceTheme, "name">;
 
 
 export interface BoardTheme {
