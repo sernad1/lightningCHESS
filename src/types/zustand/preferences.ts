@@ -2,6 +2,7 @@ export type ViewMode = "2D" | "3D";
 export type PreferredSide = "white" | "black" | "random";
 export type PreferredGameMode = "bullet" | "blitz" | "rapid" | "classical" | "chess960";
 
+
 export interface BoardTheme {
   name: string;
   lightSquare: string;

@@ -5,3 +5,9 @@ export interface NavigationItem {
   label: string;
   icon: LucideIcon;
 }
+
+export type StatusMessageType = "success" | "error";
+export type StatusMessage = {
+  type: StatusMessageType;
+  text: string;
+}

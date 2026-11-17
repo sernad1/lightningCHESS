@@ -9,8 +9,8 @@ export const boardThemeSchema = z.object({
 
 export const pieceThemeSchema = z.object({
   name: z.string(),
-  whiteColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
-  blackColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
+  whitePrimary: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
+  blackPrimary: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
 });
 
 export type BoardTheme = z.infer<typeof boardThemeSchema>;

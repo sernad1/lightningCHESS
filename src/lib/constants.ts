@@ -1,4 +1,4 @@
-import { BoardTheme, PieceTheme } from "@/types/zustand/preferences";
+import { BoardTheme, PieceTheme} from "@/types/zustand/preferences";
 import { PieceSymbol } from "chess.js";
 
 export const PIECE_MODELS: Partial<Record<PieceSymbol, string>> = {
@@ -29,3 +29,15 @@ export const PIECE_UNICODES: Record<string, string> = {
   wP: "♙", wR: "♖", wN: "♘", wB: "♗", wQ: "♕", wK: "♔",
   bP: "♟", bR: "♜", bN: "♞", bB: "♝", bQ: "♛", bK: "♚",
 };
+
+
+export const BOARD_THEME_PICKERS_UI = [
+  { key: "lightSquare", label: "Jasne pola" },
+  { key: "darkSquare", label: "Ciemne pola" },
+  { key: "boardFrame", label: "Ramka" }
+] as const
+
+export const PIECE_THEME_PICKERS_UI = [
+  { key: "whitePrimary", label: "Białe bierki" },
+  { key: "blackPrimary", label: "Czarne bierki" },
+] as const
