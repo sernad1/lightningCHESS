@@ -8,9 +8,8 @@ import { saveUserThemesAction } from "@/actions/preferences";
 import { StatusMessage } from "@/types/navigation";
 import { BoardThemePicker } from "./BoardThemePicker";
 import { PieceThemePicker } from "./PieceThemePicker";
-import { SettingsFooter } from "./SettingsFooter";
 
-export default function SettingsClient() {
+export default function SettingsClient({children}: {children?: React.ReactNode}) {
   const boardTheme = usePreferredBoardTheme();
   const pieceTheme = usePreferredPieceTheme();
   const { setBoardTheme, setPieceTheme } = usePreferencesActions();
@@ -78,7 +77,7 @@ export default function SettingsClient() {
         <PieceThemePicker onPieceColorChange={handlePieceColorChange}/>
       </div>
 
-      <SettingsFooter/>
+      {children}
     </div>
   );
 }
