@@ -1,5 +1,5 @@
-import DeleteAccountButton from "./DeleteAccountButton";
-import SignOutButton from "./sign-out-button";
+import DeleteAccountButton from "../DeleteAccountButton";
+import SignOutButton from "../sign-out-button";
 
 export function SettingsFooter(){
     return (
