@@ -69,9 +69,9 @@ export default function ChessPage() {
     : "";
 
   return (
-    <div className="min-h-screen w-full bg-main-darkest text-main-white flex flex-col lg:flex-row items-center lg:items-stretch justify-center gap-6 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-full w-full bg-main-darkest text-main-white flex flex-col lg:flex-row items-center xl:items-stretch justify-center gap-6 p-4 sm:p-6 pb-20 md:pb-6">
       {/* LEWA SEKCJA: Szachownica + Paski stron (Czarne / Białe) */}
-      <div className="flex flex-col justify-center items-center w-full max-w-[min(92vw,640px)] lg:max-w-[calc(100vh-5rem)] gap-3">
+      <div className="flex flex-col justify-center items-center w-full max-w-[min(100%,540px)] xl:max-w-[min(100%,calc(100dvh-15rem))] gap-3">
         {/* Pasek Czarnych (Góra) */}
         <div
           className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl border transition-colors ${
@@ -97,7 +97,7 @@ export default function ChessPage() {
         </div>
 
         {/* Kontener Szachownicy */}
-        <div className="w-full aspect-square flex items-center justify-center rounded-xl overflow-hidden shadow-2xl shadow-black/50 border border-main-dark/60 bg-main-dark/20">
+        <div className="w-full aspect-square rounded-xl overflow-hidden shadow-2xl shadow-black/50">
           <ChessBoard
             selectedSquare={selectedSquare}
             onSquareClick={handleSquareClick}
