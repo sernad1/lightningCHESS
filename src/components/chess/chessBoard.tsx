@@ -9,17 +9,16 @@ interface ChessBoardProps {
   onSquareClick?: (square: string) => void;
 }
 
-export default function ChessBoard({ selectedSquare, onSquareClick}: ChessBoardProps) {
+export default function ChessBoard({ selectedSquare, onSquareClick }: ChessBoardProps) {
   const viewMode = usePreferredViewMode();
 
   return (
-    <div className="relative w-[850px] h-[850px] max-w-full aspect-square">
-      <div className={viewMode === "2D" ? "w-full h-full block" : "hidden"}>
-        <ChessBoard2D selectedSquare={selectedSquare} onSquareClick={onSquareClick}/>
-      </div>
-      <div className={viewMode === "3D" ? "w-full h-full block" : "hidden"}>
-        <ChessBoard3D onSquareClick={onSquareClick}/>
-      </div>
+    <div className="relative w-full h-full">
+      {viewMode === "2D" ? (
+        <ChessBoard2D selectedSquare={selectedSquare} onSquareClick={onSquareClick} />
+      ) : (
+        <ChessBoard3D onSquareClick={onSquareClick} />
+      )}
     </div>
   );
 }
