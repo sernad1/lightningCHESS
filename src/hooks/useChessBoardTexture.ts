@@ -18,7 +18,7 @@ const boardFragmentShader = `
 
   void main() {
     vec2 pos = floor(vUv * 8.0);
-    float pattern = mod(pos.x + pos.y, 2.0);
+    float pattern = 1.0 - mod(pos.x + pos.y, 2.0);
     
     vec3 color = mix(uLightSquare, uDarkSquare, pattern);
     gl_FragColor = vec4(color, 1.0);
