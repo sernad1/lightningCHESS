@@ -11,10 +11,11 @@ import { useGameFen } from "@/stores/useGameStore";
 import { usePreferredPieceTheme } from "@/stores/usePreferencesStore";
 
 interface ChessBoard3DProps {
+  selectedSquare?: string | null;
   onSquareClick?: (square: string) => void;
 }
 
-export default function ChessBoard3D({ onSquareClick }: ChessBoard3DProps) {
+export default function ChessBoard3D({ selectedSquare, onSquareClick }: ChessBoard3DProps) {
   const fen = useGameFen();
   const pieces = useMemo(() => getPiecesFromFen(fen), [fen]);
   const {whitePrimary, blackPrimary} = usePreferredPieceTheme();
@@ -24,23 +25,23 @@ export default function ChessBoard3D({ onSquareClick }: ChessBoard3DProps) {
       <Suspense fallback={null}>
         <Canvas shadows camera={{ position: [0, 12, 8], fov: 45 }} frameloop="demand">
           <SceneEnvironment />
+
           <directionalLight castShadow shadow-mapSize-width={2048} shadow-mapSize-height={2048}
             shadow-camera-left={-8} shadow-camera-right={8} shadow-camera-top={8}
             shadow-camera-bottom={-8} shadow-camera-near={0.25} shadow-camera-far={30}
 			      shadow-bias={-0.0005} shadow-normalBias={0.05} position={[7, 8, 7]} intensity={0.5}/>
 
           <ChessBoardModel coords={[0, -0.5, 0]}
-            //onSquareClick={onSquareClick}
-			      // Temporary logger, to show that clicking works
-			        onSquareClick={(square) => {console.log("Clicked square: ", square)}}/>
+            		onSquareClick={onSquareClick}/>
 
           {pieces.map((piece) => (
-            <ChessPieceModel key={`${piece.color}-${piece.type}-${piece.square}`}
-              modelPath={PIECE_MODELS[piece.type] || ""} coords={getChessPieceModelCoords(piece.square)}
-			        pieceColor={piece.color === "w" ? whitePrimary : blackPrimary} scale={0.5}
-              //onClick={() => onSquareClick?.(piece.square)}
-			        // Temporary logger, to show that clicking works
-			         onClick={() => {console.log("Clicked Piece: ", piece.square)}}/>
+            <ChessPieceModel 
+					key={`${piece.color}-${piece.type}-${piece.square}`}
+              		modelPath={PIECE_MODELS[piece.type] || ""}
+					coords={getChessPieceModelCoords(piece.square)}
+			        pieceColor={piece.color === "w" ? whitePrimary : blackPrimary} 
+					scale={0.5}
+              		onPieceClick={() => onSquareClick?.(piece.square)}/>
           ))}
         </Canvas>
       </Suspense>

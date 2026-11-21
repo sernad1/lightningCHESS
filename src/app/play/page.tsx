@@ -24,29 +24,6 @@ export default function ChessPage() {
     }
   }, [status, initGame]);
 
-  const handleSquareClick = (square: string) => {
-    const board = new Chess(fen);
-    const clickedPiece = board.get(square as Square);
-
-    if (!selectedSquare) {
-      if (clickedPiece && clickedPiece.color === turn) {
-        setSelectedSquare(square);
-      }
-      return;
-    }
-
-    if (selectedSquare === square) {
-      setSelectedSquare(null);
-      return;
-    }
-
-    const moved = makeMove(selectedSquare, square, "q");
-    if (moved) setSelectedSquare(null);
-    else if (clickedPiece && clickedPiece.color === turn) {
-      setSelectedSquare(square);
-    } else setSelectedSquare(null);
-  };
-
   const handleBoardReset = () => {
     setSelectedSquare(null);
     resetGame();
@@ -74,7 +51,7 @@ export default function ChessPage() {
         </div>
 
         <div className="w-full aspect-square rounded-xl overflow-hidden shadow-2xl shadow-black/50">
-          <ChessBoard selectedSquare={selectedSquare} onSquareClick={handleSquareClick}/>
+          <ChessBoard/>
         </div>
 
         <div className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl border transition-colors ${

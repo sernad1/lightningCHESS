@@ -9,10 +9,16 @@ interface ChessPieceModelProps {
   modelPath: string;
   scale?: number;
   pieceColor: string;
-  onClick?: () => void;
+  onPieceClick?: () => void;
 }
 
-export function ChessPieceModel({ coords, modelPath, scale = 1, pieceColor, onClick }: ChessPieceModelProps) {
+export function ChessPieceModel({
+  coords,
+  modelPath,
+  scale = 1,
+  pieceColor,
+  onPieceClick,
+}: ChessPieceModelProps) {
   const groupRef = useRef<THREE.Group>(null);
   const { invalidate } = useThree();
 
@@ -21,24 +27,34 @@ export function ChessPieceModel({ coords, modelPath, scale = 1, pieceColor, onCl
   }, [coords, invalidate]);
 
   return (
-    <LoadedPieceModel 
-      groupRef={groupRef} 
-      coords={coords} 
-      modelPath={modelPath} 
-      scale={scale} 
-	  modelColor={pieceColor}
-      onClick={onClick} 
+    <LoadedPieceModel
+      groupRef={groupRef}
+      coords={coords}
+      modelPath={modelPath}
+      scale={scale}
+      modelColor={pieceColor}
+      onPieceClick={onPieceClick}
     />
   );
 }
 
-function LoadedPieceModel({ groupRef, coords, modelPath, scale, modelColor, onClick }: {
+interface LoadedPieceModelProps {
   groupRef: React.RefObject<THREE.Group | null>;
   coords: [number, number, number];
   modelPath: string;
   scale: number;
-  onClick?: () => void;
-}) {
+  modelColor: string;
+  onPieceClick?: () => void;
+}
+
+function LoadedPieceModel({
+  groupRef,
+  coords,
+  modelPath,
+  scale,
+  modelColor,
+  onPieceClick,
+}: LoadedPieceModelProps) {
   const gltf = useLoader(GLTFLoader, modelPath);
   const { invalidate } = useThree();
   const noiseTexture = useBakedNoiseTexture(512);
@@ -49,20 +65,21 @@ function LoadedPieceModel({ groupRef, coords, modelPath, scale, modelColor, onCl
     clone.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
+
         mesh.castShadow = true;
         mesh.receiveShadow = true;
 
-		mesh.material = new THREE.MeshStandardMaterial({
-			color: modelColor,
-			roughness: 0.25,
-			metalness: 0.1,
-			roughnessMap: noiseTexture
-		});
+        mesh.material = new THREE.MeshStandardMaterial({
+          color: modelColor,
+          roughness: 0.25,
+          metalness: 0.1,
+          roughnessMap: noiseTexture,
+        });
       }
     });
 
     return clone;
-  }, [gltf.scene, noiseTexture]);
+  }, [gltf.scene, noiseTexture, modelColor]);
 
   useEffect(() => {
     invalidate();
@@ -74,10 +91,14 @@ function LoadedPieceModel({ groupRef, coords, modelPath, scale, modelColor, onCl
       position={coords}
       onClick={(e) => {
         e.stopPropagation();
-        onClick?.();
+        onPieceClick?.();
       }}
     >
-      <primitive object={clonedScene} scale={[scale, scale, scale]} />
+      <primitive
+        object={clonedScene}
+        scale={[scale, scale, scale]}
+      />
     </group>
   );
 }
+
