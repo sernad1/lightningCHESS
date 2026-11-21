@@ -2,6 +2,7 @@
 
 import { Suspense, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
+import { Square } from "chess.js";
 import { ChessBoardModel } from "@/components/chess/scene/chessBoardModel";
 import { ChessPieceModel } from "@/components/chess/scene/chessPieceModel";
 import { SceneEnvironment } from "@/components/chess/scene/sceneEnvironment";
@@ -9,18 +10,17 @@ import { getChessPieceModelCoords, getPiecesFromFen } from "@/lib/utils";
 import { PIECE_MODELS } from "@/lib/constants";
 import { useGameFen } from "@/stores/useGameStore";
 import { usePreferredPieceTheme } from "@/stores/usePreferencesStore";
-import { Square } from "chess.js";
 
 interface ChessBoard3DProps {
-  viewFromOpposite?: bool;
-  selectedSquare?: string | null;
+  viewFromOpposite?: boolean;
+  selectedSquare?: Square | null;
   onSquareClick?: (square: Square) => void;
 }
 
-export default function ChessBoard3D({ viewFromOpposite, selectedSquare, onSquareClick }: ChessBoard3DProps) {
+export default function ChessBoard3D({ viewFromOpposite = false, onSquareClick}: ChessBoard3DProps) {
   const fen = useGameFen();
   const pieces = useMemo(() => getPiecesFromFen(fen), [fen]);
-  const {whitePrimary, blackPrimary} = usePreferredPieceTheme();
+  const { whitePrimary, blackPrimary } = usePreferredPieceTheme();
 
   return (
     <div className="w-full h-full border border-border rounded-lg flex items-center justify-center bg-slate-950 text-slate-200">
@@ -29,21 +29,17 @@ export default function ChessBoard3D({ viewFromOpposite, selectedSquare, onSquar
           <SceneEnvironment />
 
           <directionalLight castShadow shadow-mapSize-width={2048} shadow-mapSize-height={2048}
-            shadow-camera-left={-8} shadow-camera-right={8} shadow-camera-top={8}
-            shadow-camera-bottom={-8} shadow-camera-near={0.25} shadow-camera-far={30}
-			      shadow-bias={-0.0005} shadow-normalBias={0.05} position={[7, 8, 7]} intensity={0.5}/>
+            shadow-camera-left={-8} shadow-camera-right={8} shadow-camera-top={8} shadow-camera-bottom={-8}
+            shadow-camera-near={0.25} shadow-camera-far={30} shadow-bias={-0.0005} shadow-normalBias={0.05}
+            position={[7, 8, 7]} intensity={0.5}/>
 
-          <ChessBoardModel coords={[0, -0.5, 0]}
-            		onSquareClick={onSquareClick}/>
+          <ChessBoardModel coords={[0, -0.5, 0]} onSquareClick={onSquareClick} />
 
           {pieces.map((piece) => (
-            <ChessPieceModel 
-					key={`${piece.color}-${piece.type}-${piece.square}`}
-              		modelPath={PIECE_MODELS[piece.type] || ""}
-					coords={getChessPieceModelCoords(piece.square)}
-			        pieceColor={piece.color === "w" ? whitePrimary : blackPrimary} 
-					scale={0.5}
-              		onPieceClick={() => onSquareClick?.(piece.square)}/>
+            <ChessPieceModel key={`${piece.color}-${piece.type}-${piece.square}`}
+              modelPath={PIECE_MODELS[piece.type] || ""} coords={getChessPieceModelCoords(piece.square)}
+              pieceColor={piece.color === "w" ? whitePrimary : blackPrimary} scale={0.5}
+              onPieceClick={() => onSquareClick?.(piece.square)}/>
           ))}
         </Canvas>
       </Suspense>

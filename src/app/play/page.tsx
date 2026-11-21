@@ -1,41 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
-import { Chess, Square } from "chess.js";
 import ChessBoard from "@/components/chess/chessBoard";
 import { Button } from "@/components/ui/button";
-import { useGameFen, useGamePgn, useGameStatus, useGameMoveTurn, useGameStoreActions} from "@/stores/useGameStore";
+import { useGamePgn, useGameStatus, useGameMoveTurn, useGameStoreActions} from "@/stores/useGameStore";
 import { usePreferredViewMode, usePreferencesActions} from "@/stores/usePreferencesStore";
 
 export default function ChessPage() {
-  const fen = useGameFen();
   const pgn = useGamePgn();
   const status = useGameStatus();
   const turn = useGameMoveTurn();
-  const { initGame, makeMove, resetGame } = useGameStoreActions();
+  const { initGame, resetGame } = useGameStoreActions();
   const viewMode = usePreferredViewMode();
   const { setViewMode } = usePreferencesActions();
-  const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
+  const cleanMoves = pgn ? pgn.replace(/\[[^\]]*\]\s*/g, "").replace(/\*$/, "").trim() : "";
 
   useEffect(() => {
-    if (status === "WAITING") {
-      initGame({ id: "local-session" });
-    }
+    if (status === "WAITING") initGame({ id: "local-session" });
   }, [status, initGame]);
-
-  const handleBoardReset = () => {
-    setSelectedSquare(null);
-    resetGame();
-  };
-
-  const cleanMoves = pgn ? pgn.replace(/\[[^\]]*\]\s*/g, "").replace(/\*$/, "").trim() : "";
 
   return (
     <div className="min-h-full w-full bg-main-darkest text-main-white flex flex-col lg:flex-row items-center xl:items-stretch justify-center gap-6 p-4 sm:p-6 pb-20 md:pb-6">
       <div className="flex flex-col justify-center items-center w-full max-w-[min(100%,540px)] xl:max-w-[min(100%,calc(100dvh-15rem))] gap-3">
-        <div className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl border transition-colors ${
-            turn === "b" ? "bg-main-dark/70 border-main-accent shadow-md" : "bg-main-dark/30 border-main-dark/60"}`}>
+        <div className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl border transition-colors ${turn === "b"
+              ? "bg-main-dark/70 border-main-accent shadow-md" : "bg-main-dark/30 border-main-dark/60"}`}>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-main-darkest border border-main-dark flex items-center justify-center text-base text-main-white">
               ♚
@@ -44,18 +33,16 @@ export default function ChessPage() {
           </div>
 
           {turn === "b" && (
-            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-main-accent text-main-darkest">
-              Ruch czarnych
-            </span>
+            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-main-accent text-main-darkest">Ruch czarnych</span>
           )}
         </div>
 
         <div className="w-full aspect-square rounded-xl overflow-hidden shadow-2xl shadow-black/50">
-          <ChessBoard/>
+          <ChessBoard />
         </div>
 
-        <div className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl border transition-colors ${
-            turn === "w" ? "bg-main-dark/70 border-main-accent shadow-md" : "bg-main-dark/30 border-main-dark/60"}`}>
+        <div className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl border transition-colors ${turn === "w"
+              ? "bg-main-dark/70 border-main-accent shadow-md" : "bg-main-dark/30 border-main-dark/60"}`}>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-main-white text-main-darkest flex items-center justify-center text-base font-bold">
               ♔
@@ -81,12 +68,9 @@ export default function ChessPage() {
           </div>
 
           <div className="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-main-darkest/90 border border-main-dark/60">
-            <span className="text-xs uppercase tracking-wider text-main-light font-medium">
-              Aktualny ruch:
-            </span>
+            <span className="text-xs uppercase tracking-wider text-main-light font-medium">Aktualny ruch:</span>
             <div className="flex items-center gap-2">
-              <span className={`w-3 h-3 rounded-full border ${turn === "w"
-                    ? "bg-main-white border-main-light" : "bg-main-darkest border-main-light"}`}/>
+              <span className={`w-3 h-3 rounded-full border ${turn === "w" ? "bg-main-white border-main-light" : "bg-main-darkest border-main-light"}`}/>
               <span className="text-sm font-bold text-main-white">
                 {turn === "w" ? "Chodzą Biali" : "Chodzą Czarni"}
               </span>
@@ -95,17 +79,13 @@ export default function ChessPage() {
         </div>
 
         <div className="flex-1 flex flex-col p-4 sm:p-5 min-h-[180px] lg:min-h-0">
-          <span className="text-xs font-semibold uppercase tracking-wider text-main-light mb-2">
-            Historia ruchów
-          </span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-main-light mb-2">Historia ruchów</span>
 
           <div className="flex-1 w-full p-3.5 rounded-xl bg-main-darkest/80 text-sm font-mono text-main-white overflow-y-auto border border-main-dark/60 leading-relaxed">
             {cleanMoves ? (
               cleanMoves
             ) : (
-              <span className="text-main-light/60 italic">
-                Brak wykonanych ruchów. Rozpocznij partię białymi.
-              </span>
+              <span className="text-main-light/60 italic">Brak wykonanych ruchów. Rozpocznij partię białymi.</span>
             )}
           </div>
         </div>
@@ -126,7 +106,7 @@ export default function ChessPage() {
 
           <Button type="button" variant="outline"
             className="w-full bg-transparent hover:bg-main-dark/60 text-main-light hover:text-main-white border-main-dark py-5 rounded-xl transition-all cursor-pointer"
-            onClick={handleBoardReset}>
+            onClick={resetGame}>
             ↺ Resetuj szachownicę
           </Button>
         </div>
