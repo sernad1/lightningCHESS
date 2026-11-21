@@ -18,7 +18,7 @@ export default function ChessBoard() {
       {viewMode === "2D" ? (
         <ChessBoard2D selectedSquare={selectedSquare} onSquareClick={handleSquareClick} />
       ) : (
-        <ChessBoard3D selectedSquare={selectedSquare} onSquareClick={handleSquareClick} />
+        <ChessBoard3D viewFromOpposite={false} selectedSquare={selectedSquare} onSquareClick={handleSquareClick} />
       )}
     </div>
   );
