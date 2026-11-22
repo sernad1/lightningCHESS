@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { Chess, Square } from "chess.js";
+import { useState, useCallback, useMemo } from "react";
+import { Chess, Move, Square } from "chess.js";
 import { CurrentMoveTurn, PromotionPiece } from "@/types/zustand/game";
 
 interface UseSquareClickProps {
@@ -12,6 +12,20 @@ interface UseSquareClickProps {
 export function useSquareClick({ fen, turn, disabled = false, makeMove}: UseSquareClickProps) {
   const [selection, setSelection] = useState<{ fen: string; square: Square } | null>(null);
   const selectedSquare = !disabled && selection?.fen === fen ? selection.square : null;
+  const possibleMoves = useMemo<Move[]>(() => {
+    if (!selectedSquare) return [];
+
+    const board = new Chess(fen);
+    const seen = new Set<Square>();
+
+    return board.moves({ square: selectedSquare, verbose: true }).filter((move) => {
+
+        if (seen.has(move.to)) return false;
+        seen.add(move.to);
+        return true;
+      });
+  }, [fen, selectedSquare]);
+
   const handleSquareClick = useCallback((square: Square) => {
       if (disabled) return;
 
@@ -39,5 +53,5 @@ export function useSquareClick({ fen, turn, disabled = false, makeMove}: UseSqua
 
   const clearSelection = useCallback(() => { setSelection(null)}, []);
 
-  return { selectedSquare, handleSquareClick, clearSelection};
+  return { selectedSquare, possibleMoves, handleSquareClick, clearSelection};
 }

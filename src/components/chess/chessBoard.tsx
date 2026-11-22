@@ -16,12 +16,12 @@ export default function ChessBoard({boardFlipped}: ChessBoardProps) {
   const turn = useGameMoveTurn();
   const status = useGameStatus();
   const { makeMove } = useGameStoreActions();
-  const { selectedSquare, handleSquareClick } = useSquareClick({ fen, turn, disabled: status !== "IN_PROGRESS", makeMove});
+  const { selectedSquare, possibleMoves, handleSquareClick } = useSquareClick({ fen, turn, disabled: status !== "IN_PROGRESS", makeMove});
 
   return (
     <div className="relative w-full h-full">
       {viewMode === "2D" ? (
-        <ChessBoard2D isBoardFlipped={boardFlipped} selectedSquare={selectedSquare} onSquareClick={handleSquareClick}/>
+        <ChessBoard2D isBoardFlipped={boardFlipped} possibleMoves={possibleMoves} selectedSquare={selectedSquare} onSquareClick={handleSquareClick}/>
       ) : (
         <ChessBoard3D viewFromOpposite={boardFlipped} selectedSquare={selectedSquare} onSquareClick={handleSquareClick}/>
       )}
