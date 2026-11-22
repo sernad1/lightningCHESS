@@ -2,8 +2,8 @@
 
 import React, { useMemo } from "react";
 import { Move, Square } from "chess.js";
+import { useCustomPieces } from "@/hooks/useCustomPieces";
 import { Chessboard } from "react-chessboard";
-import { PIECE_UNICODES } from "@/lib/constants";
 import { useGameFen, useGameStoreActions } from "@/stores/useGameStore";
 import { usePreferredBoardTheme, usePreferredPieceTheme} from "@/stores/usePreferencesStore";
 
@@ -19,34 +19,7 @@ export default function ChessBoard2D({ isBoardFlipped, selectedSquare, possibleM
   const { makeMove } = useGameStoreActions();
   const boardTheme = usePreferredBoardTheme();
   const pieceTheme = usePreferredPieceTheme();
-  const customPieces = useMemo(() => {
-  const pieceComponents: Record<string, () => React.JSX.Element> = {};
-  const pieceNames: Record<string, string> = {K: "king", Q: "queen", R: "rook", B: "bishop", N: "knight", P: "pawn"};
-
-  Object.keys(PIECE_UNICODES).forEach((code) => {
-    const isWhite = code.startsWith("w");
-    const color = isWhite ? pieceTheme.whitePrimary : pieceTheme.blackPrimary;
-    const pieceName = pieceNames[code[1]];
-    const hex = color.replace("#", "");
-    const r = parseInt(hex.substring(0, 2), 16) / 255;
-    const g = parseInt(hex.substring(2, 4), 16) / 255;
-    const b = parseInt(hex.substring(4, 6), 16) / 255;
-
-    pieceComponents[code] = () => (
-      <svg viewBox="0 0 100 100" className="w-full h-full pointer-events-none">
-        <defs>
-          <filter id={`piece-filter-${code}`} colorInterpolationFilters="sRGB">
-			      <feColorMatrix in="gray" type="matrix" values={`${r} 0 0 0 0 0 ${g} 0 0 0 0 0 ${b} 0 0 0 0 0 1 0`}/>
-          </filter>
-        </defs>
-
-        <image href={`/assets/icons/${pieceName}.svg`} width="100%" height="100%" preserveAspectRatio="xMidYMid meet" filter={`url(#piece-filter-${code})`}/>
-      </svg>
-    );
-  });
-
-    return pieceComponents;
-  }, [pieceTheme]);
+  const customPieces = useCustomPieces(pieceTheme);
 
   const squareStyles = useMemo(() => {
     const styles: Record<string, React.CSSProperties> = {};
