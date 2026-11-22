@@ -6,7 +6,11 @@ import { useSquareClick } from "@/hooks/useSquareClick";
 import ChessBoard2D from "./chessBoard2D";
 import ChessBoard3D from "./chessBoard3D";
 
-export default function ChessBoard() {
+interface ChessBoardProps {
+  boardFlipped: boolean;
+}
+
+export default function ChessBoard({boardFlipped}: ChessBoardProps) {
   const viewMode = usePreferredViewMode();
   const fen = useGameFen();
   const turn = useGameMoveTurn();
@@ -17,9 +21,9 @@ export default function ChessBoard() {
   return (
     <div className="relative w-full h-full">
       {viewMode === "2D" ? (
-        <ChessBoard2D selectedSquare={selectedSquare} onSquareClick={handleSquareClick}/>
+        <ChessBoard2D isBoardFlipped={boardFlipped} selectedSquare={selectedSquare} onSquareClick={handleSquareClick}/>
       ) : (
-        <ChessBoard3D viewFromOpposite={true} selectedSquare={selectedSquare} onSquareClick={handleSquareClick}/>
+        <ChessBoard3D viewFromOpposite={boardFlipped} selectedSquare={selectedSquare} onSquareClick={handleSquareClick}/>
       )}
     </div>
   );

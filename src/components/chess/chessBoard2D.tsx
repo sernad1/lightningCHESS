@@ -8,11 +8,12 @@ import { useGameFen, useGameStoreActions } from "@/stores/useGameStore";
 import { usePreferredBoardTheme, usePreferredPieceTheme} from "@/stores/usePreferencesStore";
 
 interface ChessBoard2DProps {
+  isBoardFlipped: boolean;
   selectedSquare?: Square | null;
   onSquareClick?: (square: Square) => void;
 }
 
-export default function ChessBoard2D({ selectedSquare, onSquareClick}: ChessBoard2DProps) {
+export default function ChessBoard2D({ isBoardFlipped, selectedSquare, onSquareClick}: ChessBoard2DProps) {
   const fen = useGameFen();
   const { makeMove } = useGameStoreActions();
   const boardTheme = usePreferredBoardTheme();
@@ -42,9 +43,9 @@ export default function ChessBoard2D({ selectedSquare, onSquareClick}: ChessBoar
     <div className="w-full flex items-center justify-center">
       <div className="w-full max-w-[min(100%,calc(100dvh-14rem))] md:max-w-[min(100%,calc(100dvh-8rem))] aspect-square rounded-md sm:rounded-lg shadow-2xl overflow-hidden border-4 sm:border-8 touch-none"
         style={{ borderColor: boardTheme.boardFrame }}>
-        <Chessboard options={{ position: fen, pieces: customPieces, lightSquareStyle: { backgroundColor: boardTheme.lightSquare },
-            darkSquareStyle: { backgroundColor: boardTheme.darkSquare }, squareStyles: selectedSquare
-              ? { [selectedSquare]: { backgroundColor: "rgba(255, 255, 0, 0.4)"}} : {},
+        <Chessboard options={{ position: fen, pieces: customPieces, boardOrientation: isBoardFlipped ? "black" : "white", 
+          lightSquareStyle: { backgroundColor: boardTheme.lightSquare }, darkSquareStyle: { backgroundColor: boardTheme.darkSquare }, 
+          squareStyles: selectedSquare ? { [selectedSquare]: { backgroundColor: "rgba(255, 255, 0, 0.4)"}} : {},
             
             onPieceDrop: ({ sourceSquare, targetSquare }) => {
               if (!targetSquare || sourceSquare === targetSquare) return false;

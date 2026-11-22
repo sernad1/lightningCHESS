@@ -1,7 +1,7 @@
 "use client";
 
-import { Suspense, useMemo } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Suspense, useEffect, useMemo } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Square } from "chess.js";
 import { ChessBoardModel } from "@/components/chess/scene/chessBoardModel";
 import { ChessPieceModel } from "@/components/chess/scene/chessPieceModel";
@@ -17,15 +17,29 @@ interface ChessBoard3DProps {
   onSquareClick?: (square: Square) => void;
 }
 
+function CameraController({ viewFromOpposite }: { viewFromOpposite: boolean }) {
+  const { camera, invalidate } = useThree();
+
+  useEffect(() => {
+    camera.position.set(0, 12, viewFromOpposite ? -8 : 8);
+    camera.lookAt(0, 0, 0);
+    invalidate();
+  }, [viewFromOpposite, camera, invalidate]);
+
+  return null;
+}
+
 export default function ChessBoard3D({ viewFromOpposite = false, onSquareClick}: ChessBoard3DProps) {
   const fen = useGameFen();
   const pieces = useMemo(() => getPiecesFromFen(fen), [fen]);
   const { whitePrimary, blackPrimary } = usePreferredPieceTheme();
 
+
   return (
     <div className="w-full h-full border border-border rounded-lg flex items-center justify-center bg-slate-950 text-slate-200">
       <Suspense fallback={null}>
         <Canvas shadows camera={{ position: viewFromOpposite ? [0, 12, -8] : [0, 12, 8], fov: 45 }} frameloop="demand">
+          <CameraController viewFromOpposite={viewFromOpposite}/>
           <SceneEnvironment />
 
           <directionalLight castShadow shadow-mapSize-width={2048} shadow-mapSize-height={2048}

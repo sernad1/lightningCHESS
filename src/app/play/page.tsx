@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import ChessBoard from "@/components/chess/chessBoard";
 import GameOverModal from "@/components/chess/gameOverModal";
@@ -9,6 +9,7 @@ import { useGameEndingReason, useGameMoveTurn, useGamePgn, useGameResult, useGam
 import { usePreferredViewMode, usePreferencesActions} from "@/stores/usePreferencesStore";
 
 export default function ChessPage() {
+  const [isBoardFlpped, setIsBoardFilpped] = useState(false);
   const pgn = useGamePgn();
   const status = useGameStatus();
   const result = useGameResult();
@@ -27,6 +28,8 @@ export default function ChessPage() {
       initGame({ id: "local-session" });
     }
   }, [status, initGame]);
+
+  const handleBoardSideToggle = () => setIsBoardFilpped((prev) => !prev);
 
   return (
     <div className="min-h-full w-full bg-main-darkest text-main-white flex flex-col lg:flex-row items-center xl:items-stretch justify-center gap-6 p-4 sm:p-6 pb-20 md:pb-6">
@@ -54,7 +57,7 @@ export default function ChessPage() {
         </div>
 
         <div className="w-full aspect-square rounded-xl overflow-hidden shadow-2xl shadow-black/50">
-          <ChessBoard />
+          <ChessBoard boardFlipped={isBoardFlpped}  />
         </div>
 
         <div className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl border transition-colors ${
@@ -132,6 +135,11 @@ export default function ChessPage() {
             className="w-full bg-transparent hover:bg-main-dark/60 text-main-light hover:text-main-white border-main-dark py-5 rounded-xl transition-all cursor-pointer"
             onClick={resetGame}>
             ↺ Resetuj szachownicę
+          </Button>
+          <Button type="button" variant="outline"
+            className="w-full bg-transparent hover:bg-main-dark/60 text-main-light hover:text-main-white border-main-dark py-5 rounded-xl transition-all cursor-pointer"
+            onClick={handleBoardSideToggle}>
+            Odwróć szachownicę
           </Button>
         </div>
       </aside>
