@@ -4,6 +4,7 @@ import { Color, PieceSymbol, Square } from "chess.js";
 export type CurrentMoveTurn = "w" | "b"
 export type PromotionPiece = "q" | "r" | "b" | "n";
 export type FENPiece = { square: Square; type: PieceSymbol; color: Color } 
+export type GameOverStatus = { isOver: boolean; result?: GameResult; reason?: string };
 
 export type GameStore = {
     id: string | null;
@@ -11,6 +12,7 @@ export type GameStore = {
     timeControlMode: TimeControlMode;
     status: GameStatus;
     result: GameResult | null;
+    endingReason: string;
     fen: string;
     pgn: string;
     turn: CurrentMoveTurn;
@@ -22,7 +24,7 @@ export type GameStore = {
             timeMs?: number; fen?: string;}) => void;
         makeMove: (from: string, to: string, promotion?: PromotionPiece) => boolean
         setClocks: (whiteMs: number, blackMs: number) => void
-        endGame: (result: GameResult, status?: GameStatus) => void
+        endGame: (result: GameResult, status?: GameStatus, endingReason?: string) => void
         resetGame: () => void
     }
 }
