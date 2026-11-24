@@ -1,19 +1,20 @@
-import React, { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo } from "react";
 import { useLoader, useThree, ThreeEvent } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 import { BOARD_MODEL } from "@/lib/constants";
 import { useChessBoardTexture } from "@/hooks/useChessBoardTexture";
 import { usePreferredBoardTheme } from "@/stores/usePreferencesStore";
+import { Square } from "chess.js";
 
 interface ChessBoardModelProps {
   coords: [number, number, number];
   scale?: number;
-  onSquareClick?: (square: string) => void;
+  onSquareClick?: (square: Square) => void;
 }
 
-const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
-const RANKS = [1, 2, 3, 4, 5, 6, 7, 8];
+const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"] as const;
+const RANKS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 
 export function ChessBoardModel({ coords, scale = 1, onSquareClick }: ChessBoardModelProps) {
   const groupRef = useRef<THREE.Group>(null);
@@ -21,7 +22,6 @@ export function ChessBoardModel({ coords, scale = 1, onSquareClick }: ChessBoard
   const gltf = useLoader(GLTFLoader, BOARD_MODEL);
   const boardTexture = useChessBoardTexture(1024);
   const theme = usePreferredBoardTheme();
-
   const frameScene= useMemo(() => {
     const clone = gltf.scene.clone(true);
 
@@ -30,22 +30,15 @@ export function ChessBoardModel({ coords, scale = 1, onSquareClick }: ChessBoard
         const mesh = child as THREE.Mesh;
         mesh.castShadow = true;
         mesh.receiveShadow = true;
-
-        mesh.material = new THREE.MeshStandardMaterial({
-		  color: theme.boardFrame,
-          roughness: 0.6,
-          metalness: 0.1,
-        });
-		mesh.material.needsUpdate = true;
+        mesh.material = new THREE.MeshStandardMaterial({ color: theme.boardFrame, roughness: 0.6, metalness: 0.1});
+		    mesh.material.needsUpdate = true;
       }
     });
 
     return clone;
-  }, [gltf.scene]);
+  }, [gltf.scene, theme.boardFrame]);
 
-  useEffect(() => {
-    invalidate();
-  }, [coords, frameScene, invalidate]);
+  useEffect(() => invalidate(), [coords, frameScene, invalidate]);
 
   const handleSurfaceClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
@@ -65,29 +58,13 @@ export function ChessBoardModel({ coords, scale = 1, onSquareClick }: ChessBoard
   };
 
   return (
-    <group
-      ref={groupRef}
-      position={coords}
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
-    >
-	{/* Main board model */}
+    <group ref={groupRef} position={coords} onClick={(e) => { e.stopPropagation()}}>
       <primitive object={frameScene} scale={[scale, scale, scale]} />
 
-	{/* Thin square surface on top of board */}
-	  <mesh
-	  	position={[coords[0], 0.45, coords[2]]}
-		rotation={[-Math.PI / 2, 0, 0]}
-		receiveShadow
-		onClick={handleSurfaceClick}>
-		<planeGeometry args={[8, 8]} />
-		<meshStandardMaterial
-			map={boardTexture}
-			roughness={0.3}
-			metalness={0.05}
-		/>
-	  </mesh>
+      <mesh position={[coords[0], 0.45, coords[2]]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow onClick={handleSurfaceClick}>
+        <planeGeometry args={[8, 8]} />
+        <meshStandardMaterial map={boardTexture} roughness={0.3} metalness={0.05}/>
+      </mesh>
     </group>
   );
 }
